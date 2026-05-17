@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>CloudTop - 官网地址发布页</title>
+
+    <!-- 内联关键CSS以减少渲染阻塞 -->
+    <style>
+        :root {
+            --primary-color: #3CB371;
+            /* Green */
+            --primary-dark: #2E8B57;
+            --text-color: #333;
+            --bg-color: #f5f7fa;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --highlight-color: #2E8B57;
+            --highlight-text: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .background-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-ball {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            mix-blend-mode: multiply;
+        }
+
+        .ball-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle at 30% 30%, rgba(60, 179, 113, 0.4), rgba(60, 179, 113, 0.1) 70%, transparent);
+            top: -10%;
+            left: -10%;
+            animation: floatingBall1 25s infinite ease-in-out;
+        }
+
+        .ball-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle at 70% 70%, rgba(46, 139, 87, 0.35), rgba(46, 139, 87, 0.08) 70%, transparent);
+            top: 40%;
+            right: -5%;
+            animation: floatingBall2 30s infinite ease-in-out;
+        }
+
+        .ball-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle at 50% 50%, rgba(60, 179, 113, 0.3), rgba(60, 179, 113, 0.05) 70%, transparent);
+            bottom: -10%;
+            left: 20%;
+            animation: floatingBall3 35s infinite ease-in-out;
+        }
+
+        @keyframes floatingBall1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(2%, 5%) rotate(180deg);
+            }
+        }
+
+        @keyframes floatingBall2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-4%, -10%) rotate(-180deg);
+            }
+        }
+
+        @keyframes floatingBall3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-4%, -4%) rotate(240deg);
+            }
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        a:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            z-index: 10;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #333;
+            background: none;
+            -webkit-text-fill-color: initial;
+            text-shadow: none;
+        }
+
+        .header p.subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .promo-text {
+            color: #fff;
+            font-weight: 600;
+            background-color: var(--highlight-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .card {
+            width: 100%;
+            max-width: 650px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            z-index: 10;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: var(--primary-color);
+            padding: 1.3rem;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 1.75rem;
+        }
+
+        .link-item {
+            padding: 1.1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .link-item:hover {
+            transform: translateX(8px);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .link-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .link-item a {
+            color: #222;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .link-item a:hover {
+            color: var(--primary-color);
+        }
+
+        .link-item i {
+            display: inline-flex;
+            width: 28px;
+            height: 28px;
+            margin-right: 12px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-style: normal;
+            font-size: 0.9rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover i {
+            transform: scale(1.1);
+            background: var(--primary-dark);
+        }
+
+        .link-item .link-title {
+            flex: 1;
+        }
+
+        .link-item .link-description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.4rem;
+            padding-left: 40px;
+            line-height: 1.5;
+        }
+
+        .link-item .link-description a {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin: 0 0.25rem;
+            position: relative;
+        }
+
+        .link-item .link-description a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .link-item .link-description a:hover::after {
+            width: 100%;
+        }
+
+        .footer {
+            margin-top: 3.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            z-index: 10;
+            width: 100%;
+            color: #999;
+        }
+
+
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .header p.subtitle {
+                font-size: 1rem;
+            }
+
+            .promo-text {
+                font-size: 0.95rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .card {
+                max-width: 92%;
+            }
+
+            .card-header {
+                font-size: 1.15rem;
+                padding: 1.1rem;
+            }
+
+            .card-body {
+                padding: 1.4rem;
+            }
+
+            .link-item {
+                padding: 1rem 0;
+            }
+
+            .link-item i {
+                width: 26px;
+                height: 26px;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p.subtitle {
+                font-size: 0.95rem;
+            }
+
+            .promo-text {
+                font-size: 0.9rem;
+                margin-top: 0.75rem;
+            }
+
+            .link-item a {
+                font-size: 0.92rem;
+            }
+
+            .link-item .link-description {
+                font-size: 0.78rem;
+                padding-left: 38px;
+            }
+
+            .footer {
+                margin-top: 2.5rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 背景 -->
+        <div class="background-decoration">
+            <div class="floating-ball ball-1"></div>
+            <div class="floating-ball ball-2"></div>
+            <div class="floating-ball ball-3"></div>
+        </div>
+
+        <!-- 头部内容 -->
+        <header class="header">
+
+            <h1>CloudTop 官网地址</h1>
+            <p class="subtitle">专注海外网络服务 · 1分钟快速接入国际互联网</p>
+            <div class="promo-text">限量套餐低至1元/月，邀请新用户可得60%邀请返利</div>
+        </header>
+
+        <!-- 主卡片内容 -->
+        <div class="card">
+            <div class="card-header">
+                请 Ctrl+D 收藏本页到浏览器收藏夹
+            </div>
+            <div class="card-body">
+                <div class="link-item">
+                    <a href="https://001.cloudtop.indevs.in" target="_blank" rel="noopener noreferrer">
+                        <i>1</i>
+                        <span class="link-title">官网智能域名跳转系统一</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://002.cloudtop.indevs.in" target="_blank" rel="noopener noreferrer">
+                        <i>2</i>
+                        <span class="link-title">官网智能域名跳转系统二</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://003.cloudtop.indevs.in" target="_blank" rel="noopener noreferrer">
+                        <i>3</i>
+                        <span class="link-title">官网智能域名跳转系统三</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://v4xiaosssnnn.cloudtop01.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                        <i>4</i>
+                        <span class="link-title">官方永久主域名</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://v4xiaonnn.cloudtop01.indevs.in" target="_blank" rel="noopener noreferrer">
+                        <i>5</i>
+                        <span class="link-title">备用主域名一</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://v4xiaonzzz.cloudtop01.us.ci" target="_blank" rel="noopener noreferrer">
+                        <i>6</i>
+                        <span class="link-title">备用主域名二</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://v4xiaozzz.cloudtop02.ccwu.cc" target="_blank" rel="noopener noreferrer">
+                        <i>7</i>
+                        <span class="link-title">备用主域名三</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://t.me/+u3lgXGyLxjQ3YmI1" target="_blank" rel="noopener noreferrer">
+                        <i>🔗</i>
+                        <span class="link-title">官方电报频道</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <a href="https://t.me/+VeHZXK9gEa5hYzI1" target="_blank" rel="noopener noreferrer">
+                        <i>💬</i>
+                        <span class="link-title">官方电报群组</span>
+                    </a>
+                </div>
+
+                <div class="link-item">
+                    <div class="link-description">
+                        近期部分国产浏览器屏蔽网址，请安装国外浏览器，推荐
+                        <a href="https://www.google.cn/chrome/" target="_blank" rel="noopener noreferrer">Chrome浏览器</a>
+                        <a href="https://www.microsoft.com/zh-cn/edge/download?form=MT00LJ" target="_blank"
+                            rel="noopener noreferrer">Edge浏览器</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            © 2020-2025 CloudTop云顶网络. All Rights Reserved
+        </footer>
+    </div>
+
+    <!-- Matomo 分析代码（延迟加载） -->
+    <script>
+        window.addEventListener('load', function () {
+            var _paq = window._paq = window._paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function () {
+                var u = "//tongji.mazhifupay.com/";
+                _paq.push(['setTrackerUrl', u + 'matomo.php']);
+                _paq.push(['setSiteId', '6']);
+                var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+                g.async = true;
+                g.src = u + 'matomo.js';
+                g.setAttribute('data-no-defer', '');
+                s.parentNode.insertBefore(g, s);
+            })();
+        });
+    </script>
+
+
+
+    <!-- 性能优化：延迟加载非关键资源 -->
+    <script>
+        // 使用requestIdleCallback处理非关键任务
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(function () {
+                // 延迟加载非关键资源 
+            });
+        }
+
+        // 优化滚动性能
+        document.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, { passive: true });
+
+        // 优化动画性能 
+        /* Bubbles replaced by CSS-only floating balls */
+    </script>
+</body>
+
+</html>
