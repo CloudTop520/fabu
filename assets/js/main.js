@@ -93,8 +93,8 @@
   //    primary = 主线路，backup = 备用线路（都必须是完整 http(s):// 开头，注意冒号!）
   //    把下面 4 个值换成你自己的真实地址即可，HTML 不用动。
   var LINKS = {
-    a: { primary: 'https://fbjc01.mailcloudtop.ccwu.cc', backup: 'https://v3e51426181d1e600.yunding.sbs', title: '进入免流版', sub: '独立 App 一键连接 · 28元/月', cls: 'is-a' },
-    b: { primary: 'https://fbjc02.mailcloudtop.ccwu.cc', backup: 'https://v03xiao.cloudtop01.us.ci', title: '进入标准版', sub: '支持 Clash / 小火箭订阅 · 18元/月', cls: 'is-b' }
+    a: { primary: 'https://001.yunding.lat', backup: 'https://v3e51426181d1e600.yunding.sbs', title: '进入免流版', sub: '独立 App 一键连接 · 28元/月', cls: 'is-a' },
+    b: { primary: 'https://002.cloudtop.sbs', backup: 'https://v03dy.cloudtop.sbs', title: '进入标准版', sub: '支持 Clash / 小火箭订阅 · 18元/月', cls: 'is-b' }
   };
 
   var booted = false;
