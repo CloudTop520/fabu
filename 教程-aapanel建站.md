@@ -137,7 +137,8 @@ python3 -m http.server 8080
 | 详情里的评分、适合人群 | `index.html` 里每个卡片的 `<details class="plan__details">` 区块 |
 | 对比表内容 | `index.html` 的 `<section class="compare">` 区块（桌面表格 + 手机卡片两处） |
 | 主色 / 配色（白天、夜晚两套） | `assets/css/style.css` 顶部的 `:root` 与 `[data-theme="light"]` 变量 |
-| 弹窗里的真实入口链接 | `assets/js/main.js` 里的 `LINKS` 对象，把 `#` 换成你的地址 |
+| 弹窗里的「主线路 / 备用线路」链接 | **`index.html` 里两个「点击进入」按钮的 `data-primary` / `data-backup`**（见下方专节，这是唯一配置入口，改完立即生效） |
+| 弹窗标题 / 副标题文案 | 同上两个按钮的 `data-title` / `data-sub` |
 | 文字大小、间距 | `style.css` 里对应的 `font-size`、`padding` 等 |
 
 ### 改配色最快的方法
@@ -159,6 +160,64 @@ python3 -m http.server 8080
 
 ---
 
+## 九·五、「点击进入」线路链接在哪改（重要）
+
+**唯一配置入口在 `index.html` 的两个「点击进入」按钮上**（搜索 `class="plan__enter"`），每个按钮有 4 个属性，改这里即可，改完立即生效：
+
+```html
+<button class="plan__enter" data-pick="a"
+        data-primary="https://你的主线路A.com"      <!-- 主线路 -->
+        data-backup="https://你的备用线路A.com"      <!-- 备用线路 -->
+        data-title="进入免流版"                       <!-- 弹窗标题 -->
+        data-sub="独立 App 一键连接 · 28元/月">         <!-- 弹窗副标题 -->
+  点击进入
+</button>
+```
+
+> ⚠️ **注意**：链接必须写成完整 `http(s)://` 开头（冒号别漏）。  
+> ⚠️ **以前为什么「改了不生效」**：旧版链接同时写死在 `main.js` 和 `index.html` 两处，JS 会用自己那份覆盖你在 HTML 改的，导致白改。现在已改成**只认按钮上的 `data-*`**，不再有覆盖问题，也不用在 `main.js` 里改。
+
+### 改完为什么“还是旧内容”？（缓存真相，必看）
+
+很多人改完 `index.html` 重新上传，访问却还是旧链接，根因是**浏览器把旧 `index.html` 缓存了**，而不是代码没改对。这里把机制一次说清：
+
+1. **你改的线路链接写在 `index.html` 里**（就在按钮上），而 `index.html` 是页面本身，浏览器会把它当文档缓存起来。
+2. 文件里引用 JS/CSS 时带的 `?v=20261005` 版本号，**只对 `main.js` / `style.css` 生效，对 `index.html` 本身无效**——所以单纯把 `?v=` 数字 +1，并不能让浏览器重新拉取 `index.html`。
+
+**本模板已经做了两道保险：**
+
+- ✅ `index.html` 头部已内置禁止缓存 meta：
+  ```html
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  ```
+  → 这会让浏览器**不缓存本页**，你改完上传、普通刷新（F5）就能看到新内容。
+- ✅ 改 CSS/JS 时，把 `?v=20261005` 数字 +1（如 `20261006`）可强制刷新这两个文件。
+
+**但第一次上传带 no-cache 的新 `index.html` 前，浏览器可能还存着旧页**，所以：
+
+> 🔑 **上传后第一次，请务必强制刷新一次**（Windows `Ctrl+F5`、Mac `Cmd+Shift+R`，或开无痕窗口）。之后因为有 no-cache meta，再改 `index.html` 普通刷新就生效了。
+
+### 最彻底的办法：在 aapanel 给 HTML 加“不缓存”响应头（推荐）
+
+如果上面仍偶尔抽风，直接在服务器层面禁止缓存，一劳永逸。  
+**aapanel 操作**：网站 → 你的站点 → 设置 → 配置文件（nginx 配置），在 `server { ... }` 内加上：
+
+```nginx
+# 不缓存 HTML 页面（改了 index.html 立即生效，不被浏览器/CDN 缓存）
+location ~* \.(html|htm)$ {
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+}
+
+# CSS/JS 可长缓存（靠文件名 ?v= 版本号更新）
+location ~* \.(css|js|png|jpg|svg|ico|woff2?)$ {
+    add_header Cache-Control "public, max-age=604800";
+}
+```
+
+保存后点「重新加载配置」。这样无论怎么改 `index.html`，访问永远是最新的。
+
+---
+
 ## 十、常见问题（FAQ）
 
 **Q1：打开面板地址一片空白 / 连不上？**  
@@ -175,6 +234,15 @@ python3 -m http.server 8080
 
 **Q5：想换字体？**  
 → 改 `style.css` 里 `body` 的 `font-family`。建议保留 `system-ui` 开头的系统字体，这样**零下载、加载最快**，也最统一。
+
+**Q6：改了 `index.html`（比如改了线路链接）重新上传，访问还是旧内容？**  
+→ 这是**浏览器缓存了旧 `index.html`** 页面本身，跟 `main.js` 无关（链接就在 HTML 里）。三步走：① 本模板 `index.html` 头部已内置 `no-cache` meta，普通刷新即可；② 但**首次上传后请先强制刷新一次**（`Ctrl+F5` / 无痕窗口）；③ 若要永远不踩坑，按上方「最彻底的办法」在 aapanel 给 `.html` 加 `no-cache` 响应头。  
+> 注意：`index.html` 里的 `?v=20261005` 只管 CSS/JS，对 HTML 本身无效——这是很多人误以为"加了版本号还不生效"的真正原因。
+
+**Q7：如何更安全（防被别人 iframe 嵌套 / 点击劫持）？**  
+→ 代码里已内置「防嵌套」脚本（被 iframe 嵌入时自动跳出）。建议再在 aapanel 给站点加上响应头，更安全可靠：  
+网站 → 设置 → 配置文件（或「反向代理/响应头」）→ 加 `X-Frame-Options: DENY`。  
+> 提醒：本站的「密码门」是**前端验证**，密码在源码里（已做 base64 轻量混淆），只能挡普通访客，**不是真正的安全防护**。若要真防盗，请改用 aapanel 的「网站保护 / 访问鉴权」或后端登录。
 
 ---
 
