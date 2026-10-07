@@ -133,7 +133,7 @@ python3 -m http.server 8080
 |----------|------------------|
 | 网站标题、品牌名「CloudTop」 | `index.html` 里搜 `CloudTop` 和 `<title>` |
 | 品牌 Logo 图片 | 替换 `assets/img/logo.png`（顶栏与浏览器标签图标共用这张图） |
-| 方案名字、价格、介绍、标签 | `index.html` 的两个 `<article class="plan">` 卡片（极速版 / 标准版） |
+| 方案名字、价格、介绍、标签 | `index.html` 的两个 `<article class="plan">` 卡片（豪华版 / 标准版） |
 | 详情里的评分、适合人群 | `index.html` 里每个卡片的 `<details class="plan__details">` 区块 |
 | 对比表内容 | `index.html` 的 `<section class="compare">` 区块（桌面表格 + 手机卡片两处） |
 | 主色 / 配色（白天、夜晚两套） | `assets/css/style.css` 顶部的 `:root` 与 `[data-theme="light"]` 变量 |
@@ -168,7 +168,7 @@ python3 -m http.server 8080
 <button class="plan__enter" data-pick="a"
         data-primary="https://你的主线路A.com"      <!-- 主线路 -->
         data-backup="https://你的备用线路A.com"      <!-- 备用线路 -->
-        data-title="进入免流版"                       <!-- 弹窗标题 -->
+        data-title="进入豪华版"                       <!-- 弹窗标题 -->
         data-sub="独立 App 一键连接 · 28元/月">         <!-- 弹窗副标题 -->
   点击进入
 </button>

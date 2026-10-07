@@ -1,6 +1,11 @@
 (function () {
   'use strict';
 
+  /* ---------- 0. 安全加固：防点击劫持（被 iframe 嵌套时跳出） ---------- */
+  try {
+    if (window.self !== window.top) { window.top.location.href = window.self.location.href; }
+  } catch (e) {}
+
   /* ---------- 1. 主题切换（白天 / 夜晚） ---------- */
   var htmlEl = document.documentElement;
   var bodyEl = document.body;
@@ -21,7 +26,8 @@
   }
 
   /* ---------- 2. 访问验证（密码门 + 蜜罐机器人识别） ---------- */
-  var GATE_PASSWORD = '666';   // ← 访问密码，按需修改（同时改 index.html 提示框）
+  // 访问密码（base64 轻量混淆，避免源码里明文直读；前端验证非真安全，正式防护请走服务端）
+  var GATE_PASSWORD = (function () { try { return atob('NjY2'); } catch (e) { return '666'; } })();
   var gate = document.getElementById('gate');
   var gateForm = document.getElementById('gateForm');
   var gatePwd = document.getElementById('gatePwd');
@@ -89,13 +95,10 @@
   if (alreadyAuthed) { unlockApp(); } else { setLocked(true); setTimeout(function () { if (gatePwd) gatePwd.focus(); }, 120); }
 
   /* ---------- 3. 应用逻辑：选择卡片 + 弹窗 ---------- */
-  // ⚠️ 这里设置「点击进入」弹窗里的两条线路链接：
-  //    primary = 主线路，backup = 备用线路（都必须是完整 http(s):// 开头，注意冒号!）
-  //    把下面 4 个值换成你自己的真实地址即可，HTML 不用动。
-  var LINKS = {
-    a: { primary: 'https://001.yunding.lat', backup: 'https://v3e51426181d1e600.yunding.sbs', title: '进入免流版', sub: '独立 App 一键连接 · 28元/月', cls: 'is-a' },
-    b: { primary: 'https://002.cloudtop.sbs', backup: 'https://v03dy.cloudtop.sbs', title: '进入标准版', sub: '支持 Clash / 小火箭订阅 · 18元/月', cls: 'is-b' }
-  };
+  // ⚠️ 「点击进入」的线路链接【唯一配置入口在 index.html 的卡片按钮上】：
+  //    每张「点击进入」按钮都有 data-primary / data-backup / data-title / data-sub，
+  //    这里只负责读取并填进弹窗，不再硬编码链接 —— 改了 HTML 立即生效，不会被覆盖。
+  //    （以前双源冲突：HTML 写死 + main.js 再覆盖，导致改了不生效，现已移除。）
 
   var booted = false;
   function bootApp() {
@@ -127,15 +130,15 @@
       planB.setAttribute('aria-pressed', !isA ? 'true' : 'false');
     }
 
-    function openLinkModal(pick) {
-      var cfg = LINKS[pick];
-      if (!cfg) return;
+    function openLinkModal(btn) {
+      var pick = btn.getAttribute('data-pick');
+      if (!pick) return;
       highlightPick(pick);
-      linkPrimary.href = cfg.primary;
-      linkBackup.href = cfg.backup;
-      linkModalTitle.textContent = cfg.title;
-      linkModalSub.textContent = cfg.sub;
-      linkPrimary.className = 'link-modal__btn ' + cfg.cls;
+      linkPrimary.href = btn.getAttribute('data-primary') || '#';
+      linkBackup.href = btn.getAttribute('data-backup') || '#';
+      linkModalTitle.textContent = btn.getAttribute('data-title') || '';
+      linkModalSub.textContent = btn.getAttribute('data-sub') || '';
+      linkPrimary.className = 'link-modal__btn ' + (pick === 'a' ? 'is-a' : 'is-b');
       linkModal.classList.remove('is-hidden');
       setModalLock(true);
     }
@@ -155,11 +158,11 @@
       setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 120);
     }
 
-    // 点击“点击进入”→ 线路弹窗
+    // 点击“点击进入”→ 线路弹窗（链接从按钮自身的 data 属性读取）
     document.querySelectorAll('.plan__enter').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
-        openLinkModal(btn.getAttribute('data-pick'));
+        openLinkModal(btn);
       });
     });
 
